@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #profile-container {
+            width: 50%;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #profile-picture {
+            width: 100%;
+            height: 200px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #profile-picture img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 50%;
+        }
+
+        #user-details {
+            padding: 20px;
+        }
+
+        #edit-profile-form {
+            padding: 20px;
+            display: none;
+        }
+
+        #edit-profile-form label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        #edit-profile-form input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        #save-button, #edit-avatar-btn, #edit-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        #avatar-modal {
+            display: none;
+        }
+
+        #avatar-modal input {
+            margin-bottom: 10px;
+        }
+        #backButton {
+      margin-top: 20px;
+      background-color: #2196F3;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    </style>
+</head>
+<body>
+    <div id="profile-container">
+        <div id="profile-picture">
+            <img id="profile-image" src="profile-picture.jpg" alt="Profile Picture">
+        </div>
+        <div id="user-details">
+            <h2>User Profile</h2>
+            <p><strong>Name:</strong> John Doe</p>
+            <p><strong>Email:</strong> john.doe@example.com</p>
+            <p><strong>Location:</strong> City, Country</p>
+            <div id="button-container">
+                <button id="edit-avatar-btn" onclick="editAvatar()">Edit Avatar</button>
+                <button id="backButton" onclick="goToMainMenu()">Back to Main Menu</button>
+                <button id="edit-button" onclick="toggleEditForm()">Edit Profile</button>
+                
+            </div>
+        </div>
+        <div id="edit-profile-form">
+            <h2>Edit Profile</h2>
+            <form>
+                <label for="edit-name">Name:</label>
+                <input type="text" id="edit-name" value="John Doe" required>
+
+                <label for="edit-email">Email:</label>
+                <input type="email" id="edit-email" value="john.doe@example.com" required>
+
+                <label for="edit-location">Location:</label>
+                <input type="text" id="edit-location" value="City, Country" required>
+
+                <button type="button" id="save-button" onclick="saveProfile()">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for uploading avatar -->
+    <div id="avatar-modal">
+        <input type="file" id="avatar-input" accept="image/*">
+        <button onclick="uploadAvatar()">Upload</button>
+    </div>
+    
+    <script>
+        function toggleEditForm() {
+            const userDetails = document.getElementById('user-details');
+            const editForm = document.getElementById('edit-profile-form');
+
+            userDetails.style.display = 'none';
+            editForm.style.display = 'block';
+        }
+
+        function saveProfile() {
+            const editForm = document.getElementById('edit-profile-form');
+            const userDetails = document.getElementById('user-details');
+
+            const newName = document.getElementById('edit-name').value;
+            const newEmail = document.getElementById('edit-email').value;
+            const newLocation = document.getElementById('edit-location').value;
+
+            // Update user details
+            document.getElementById('user-details').innerHTML = `
+                <h2>User Profile</h2>
+                <p><strong>Name:</strong> ${newName}</p>
+                <p><strong>Email:</strong> ${newEmail}</p>
+                <p><strong>Location:</strong> ${newLocation}</p>
+                <div id="button-container">
+                    <button id="edit-avatar-btn" onclick="editAvatar()">Edit Avatar</button>
+                    <button id="edit-button" onclick="toggleEditForm()">Edit Profile</button>
+                </div>
+            `;
+
+            editForm.style.display = 'none';
+            userDetails.style.display = 'block';
+        }
+
+        function editAvatar() {
+            document.getElementById('avatar-modal').style.display = 'block';
+        }
+
+        function uploadAvatar() {
+            const avatarInput = document.getElementById('avatar-input');
+            const avatarImage = document.getElementById('profile-image');
+
+            const file = avatarInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    avatarImage.src = e.target.result;
+                    document.getElementById('avatar-modal').style.display = 'none';
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+        function goToMainMenu() {
+    window.location.href = "index.html"; // Replace with the actual main menu page URL
+  }
+    </script>
+</body>
+</html>

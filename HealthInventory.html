@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicine Inventory Management</title>
+  <style>
+    h1 {
+      text-align: center;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column; /* Align children in a column */
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    #container {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1200px;
+      margin-bottom: 20px;
+    }
+
+    #inventory,
+    #expiration {
+      flex: 0 0 48%;
+      min-width: 50%;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .quantity-input {
+      display: flex;
+      align-items: center;
+    }
+
+    .quantity-input input {
+      width: 50px;
+      text-align: center;
+    }
+
+    .delete-btn {
+      background-color: #FF5252;
+    }
+
+    .notification-card {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #FFEB3B;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .expired-card {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #FF5252;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    #backButton {
+      margin-top: 20px;
+      background-color: #2196F3;
+    }
+
+    @media only screen and (max-width: 600px) {
+      #container {
+        flex-direction: column;
+      }
+
+      #inventory,
+      #expiration {
+        width: 100%;
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="container">
+  <div id="inventory">
+    <h1>Medicine Inventory</h1>
+    <button onclick="addMedicine()">Add Medicine</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Medicine Name</th>
+          <th>Quantity</th>
+          <th>Expiry Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="medicineList">
+        <!-- Medicine list will be dynamically populated here -->
+      </tbody>
+    </table>
+  </div>
+
+  <div id="expiration">
+    <h1>Medicine Alert</h1>
+    <div class="notification-card" id="notificationCard">
+      <h3>Nearly Expired Medicines</h3>
+      <ul id="nearlyExpiredList"></ul>
+    </div>
+
+    <div class="expired-card" id="expiredCard">
+      <h3>Expired Medicines</h3>
+      <ul id="expiredList"></ul>
+    </div>
+  </div>
+</div>
+
+<button id="backButton" onclick="goBack()">Back to Main Menu</button>
+
+<script>
+  const medicines = [
+    { name: 'Medicine A', quantity: 50, expiryDate: '2022-12-31' },
+    { name: 'Medicine B', quantity: 30, expiryDate: '2022-11-15' },
+    { name: 'Medicine C', quantity: 20, expiryDate: '2022-10-01' },
+    { name: 'Medicine D', quantity: 10, expiryDate: '2024-02-28' } // Nearly expired within 25 days
+  ];
+
+  function addMedicine() {
+    const medicineName = prompt('Enter the name of the medicine:');
+    const quantity = parseInt(prompt('Enter the quantity:'));
+    const expiryDate = prompt('Enter the expiry date (YYYY-MM-DD):');
+
+    if (medicineName && !isNaN(quantity) && expiryDate) {
+      const newMedicine = { name: medicineName, quantity, expiryDate };
+      medicines.push(newMedicine);
+      displayMedicines();
+      checkExpiry();
+    } else {
+      alert('Invalid input. Please try again.');
+    }
+  }
+
+  function displayMedicines() {
+    const medicineList = document.getElementById('medicineList');
+    medicineList.innerHTML = '';
+
+    medicines.forEach(medicine => {
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${medicine.name}</td>
+                       <td class="quantity-input">
+                         <input type="number" value="${medicine.quantity}" id="quantity_${medicine.name}">
+                       </td>
+                       <td>${medicine.expiryDate}</td>
+                       <td>
+                         <button onclick="updateQuantity('${medicine.name}')">Update</button>
+                         <button class="delete-btn" onclick="deleteMedicine('${medicine.name}')">Delete</button>
+                       </td>`;
+      medicineList.appendChild(row);
+    });
+  }
+
+  function updateQuantity(medicineName) {
+    const quantityInput = document.getElementById(`quantity_${medicineName}`);
+    const newQuantity = parseInt(quantityInput.value);
+
+    if (!isNaN(newQuantity) && newQuantity >= 0) {
+      const medicine = medicines.find(m => m.name === medicineName);
+      if (medicine) {
+        medicine.quantity = newQuantity;
+        displayMedicines();
+        checkExpiry();
+      }
+    } else {
+      alert('Invalid input. Please enter a valid quantity.');
+    }
+  }
+
+  function deleteMedicine(medicineName) {
+    const index = medicines.findIndex(m => m.name === medicineName);
+    if (index !== -1) {
+      medicines.splice(index, 1);
+      displayMedicines();
+      checkExpiry();
+    }
+  }
+
+  function checkExpiry() {
+    const today = new Date();
+    const nearlyExpiredList = document.getElementById('nearlyExpiredList');
+    const expiredList = document.getElementById('expiredList');
+    const notificationCard = document.getElementById('notificationCard');
+    const expiredCard = document.getElementById('expiredCard');
+
+    nearlyExpiredList.innerHTML = '';
+    expiredList.innerHTML = '';
+
+    medicines.forEach(medicine => {
+      const expiryDate = new Date(medicine.expiryDate);
+      const daysDifference = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+
+      if (medicine.quantity > 0) {
+        if (daysDifference <= 40 && daysDifference > 0) {
+          const listItem = document.createElement('li');
+          listItem.textContent = `${medicine.name} - ${daysDifference} days left`;
+          nearlyExpiredList.appendChild(listItem);
+        } else if (daysDifference <= 0) {
+          const listItem = document.createElement('li');
+          listItem.textContent = `${medicine.name} - Expired`;
+          expiredList.appendChild(listItem);
+        }
+      }
+    });
+
+    notificationCard.style.display = nearlyExpiredList.children.length > 0 ? 'block' : 'none';
+    expiredCard.style.display = expiredList.children.length > 0 ? 'block' : 'none';
+  }
+
+  function goBack() {
+    window.location.href = "index.html"; // Replace with the actual main menu page URL
+  }
+
+  displayMedicines();
+  checkExpiry();
+</script>
+
+</body>
+</html>

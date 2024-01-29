@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Center Management</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right bottom, #baf1a1, #8ed080);
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: rgba(0, 0, 0, 0.1);
+      color: #fff;
+      text-align: center;
+      padding: 1em;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+
+    .feature-card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 20px;
+      padding: 20px;
+      width: 300px;
+      text-align: center;
+      transition: transform 0.3s ease-in-out;
+      cursor: pointer;
+    }
+
+    .feature-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    p {
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Medicine Center Management</h1>
+</header>
+
+<div class="container">
+
+  <!-- Database Integration Card -->
+  <div class="feature-card" onclick="goToPage('HealthInventory.html')">
+    <h2>Database Integration</h2>
+    <p>Manage medicine inventory with a robust database system.</p>
+  </div>
+
+  <!-- Real-time Notifications Card -->
+  <div class="feature-card" onclick="goToPage('HealthNotif.html')">
+    <h2>Real-time Notifications</h2>
+    <p>Inform the community about medicine availability and outbreaks.</p>
+  </div>
+
+  <!-- User Profiles Card -->
+  <div class="feature-card" onclick="goToPage('HealthUser.html')">
+    <h2>Manage User Account</h2>
+    <p>Allow user to manage the Application Account.</p>
+  </div>
+
+  <!-- Collaboration with Authorities Card -->
+  <div class="feature-card" onclick="goToPage('HealthCollab.html')">
+    <h2>Collaboration with Authorities</h2>
+    <p>Establish partnerships for up-to-date information on medicines and healthcare services.</p>
+  </div>
+
+  <!-- Personal Info Data Storage Card -->
+  <div class="feature-card" onclick="goToPage('HealthSchedule.html')">
+    <h2>Schedules</h2>
+    <p>Schedule date of patient.</p>
+  </div>
+
+</div>
+
+<script>
+  function goToPage(page) {
+    window.location.href = page;
+  }
+</script>
+
+</body>
+</html>

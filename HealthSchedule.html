@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient-Doctor Scheduler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #scheduler-container {
+            width: 400px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        #schedule-list-container {
+            width: 400px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+        #backButton {
+      margin-top: 20px;
+      background-color: #2196F3;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    </style>
+</head>
+<body>
+    <div id="scheduler-container">
+        <h2>Patient-Doctor Scheduler</h2>
+        <label for="patientName">Patient Name:</label>
+        <input type="text" id="patientName" placeholder="Enter patient name">
+
+        <label for="appointmentDate">Appointment Date:</label>
+        <input type="date" id="appointmentDate">
+
+        <label for="appointmentTime">Appointment Time:</label>
+        <input type="time" id="appointmentTime">
+
+        <button onclick="scheduleAppointment()">Schedule Appointment</button>
+    </div>
+
+    <div id="schedule-list-container">
+        <h2>Schedule List</h2>
+        <ul id="scheduleList"></ul>
+    </div>
+    <button id="backButton" onclick="goToMainMenu()">Back to Main Menu</button>
+    <script>
+        function scheduleAppointment() {
+            const patientName = document.getElementById('patientName').value;
+            const appointmentDate = document.getElementById('appointmentDate').value;
+            const appointmentTime = document.getElementById('appointmentTime').value;
+
+            if (patientName && appointmentDate && appointmentTime) {
+                const scheduleList = document.getElementById('scheduleList');
+                const listItem = document.createElement('li');
+                listItem.textContent = `${patientName} - ${appointmentDate} - ${appointmentTime}`;
+                scheduleList.appendChild(listItem);
+
+                // Clear input fields after scheduling
+                document.getElementById('patientName').value = '';
+                document.getElementById('appointmentDate').value = '';
+                document.getElementById('appointmentTime').value = '';
+            } else {
+                alert('Please fill in all fields before scheduling.');
+            }
+        }
+        function goToMainMenu() {
+    window.location.href = "index.html"; // Replace with the actual main menu page URL
+  }
+    </script>
+</body>
+</html>

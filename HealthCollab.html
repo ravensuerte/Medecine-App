@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <style>
+        h1{
+            text-align: center;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #chat-container {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #input-box {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+        }
+
+        #message-input {
+            flex: 1;
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        #send-button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #user-profile {
+            padding: 10px;
+            background-color: #ddd;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        #user-profile:hover {
+            background-color: #ccc;
+        }
+        #backButton {
+      margin-top: 20px;
+      background-color: #2196F3;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    </style>
+</head>
+<body>
+    <h1>COLLABORATION</h1>
+    <div id="chat-container">
+        <div id="user-profile" onclick="selectUser('User1')">
+            <strong>User 1</strong>
+            <!-- Add more details as needed (e.g., profile picture, status, etc.) -->
+        </div>
+        <div id="user-profile" onclick="selectUser('User2')">
+            <strong>User 2</strong>
+            <!-- Add more details as needed (e.g., profile picture, status, etc.) -->
+        </div>
+        <div id="user-profile" onclick="selectUser('User3')">
+            <strong>User 3</strong>
+            <!-- Add more details as needed (e.g., profile picture, status, etc.) -->
+        </div>
+        <div id="chat-box"></div>
+        <div id="input-box">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button id="send-button" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <button id="backButton" onclick="goToMainMenu()">Back to Main Menu</button>
+    <script>
+        let selectedUser = null;
+
+        function selectUser(user) {
+            selectedUser = user;
+            updateChatBox(); // Update the chat box when a user is selected
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value;
+
+            if (message.trim() !== '' && selectedUser) {
+                displayMessage('You', message);
+                messageInput.value = '';
+            }
+        }
+
+        function displayMessage(sender, message) {
+            const chatBox = document.getElementById('chat-box');
+            const messageDiv = document.createElement('div');
+            messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chatBox.appendChild(messageDiv);
+
+            // Scroll to the bottom of the chat box
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function updateChatBox() {
+            // Simulate loading chat history based on selected user
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML = ''; // Clear previous messages
+
+            if (selectedUser) {
+                // Simulate loading chat history for the selected user
+                // You may replace this part with actual data retrieval from a server
+                const chatHistory = getChatHistory(selectedUser);
+
+                // Display chat history
+                chatHistory.forEach(message => {
+                    displayMessage(message.sender, message.text);
+                });
+            }
+        }
+
+        // Simulated function to get chat history based on the selected user
+        function getChatHistory(user) {
+            switch (user) {
+                case 'User1':
+                    return [
+                        { sender: 'User1', text: 'Hello, IM sick What Medecine can I take Im Having a Fever?' },
+                        { sender: 'You', text: 'Hi, take a If you have a fever, I recommend taking over-the-counter medications such as acetaminophen (Tylenol) or ibuprofen (Advil, Motrin) to help reduce your fever.?' }
+                    ];
+                case 'User2':
+                    return [
+                        { sender: 'User2', text: 'Hey there!' },
+                        { sender: 'You', text: 'Hi, what\'s up?' }
+                    ];
+                case 'User3':
+                    return [
+                        { sender: 'User3', text: 'Good to see you!' },
+                        { sender: 'You', text: 'Likewise!' }
+                    ];
+                default:
+                    return [];
+            }
+        }
+        function goToMainMenu() {
+    window.location.href = "index.html"; // Replace with the actual main menu page URL
+  }
+    </script>
+</body>
+</html>

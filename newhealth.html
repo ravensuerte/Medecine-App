@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Wellness App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+    }
+
+    button {
+      font-size: 16px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    #response-container {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Health Wellness App</h1>
+  <button onclick="startConversation()">Start Conversation</button>
+
+  <div id="response-container"></div>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    let conversationContext = '';
+
+    async function startConversation() {
+     
+        const greeting = await generateGPTResponse('Hello, how can I assist you with your health and wellness today?', conversationContext);
+        displayResponse(greeting);
+      }
+
+    async function generateGPTResponse(inputText, context) {
+      const apiKey = 'YOUR_OPENAI_API_KEY'; // Replace with your OpenAI API key
+      const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          prompt: inputText,
+          max_tokens: 150, // Adjust as needed
+          context: context,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        conversationContext += data.choices[0].text.trim();
+        return conversationContext;
+      } else {
+        throw new Error(`OpenAI API Error: ${data.error.message}`);
+      }
+    }
+
+    function displayResponse(response) {
+      const responseContainer = document.getElementById('response-container');
+      const responseElement = document.createElement('p');
+      responseElement.textContent = `AI Response: ${response}`;
+      responseContainer.innerHTML = '';
+      responseContainer.appendChild(responseElement);
+
+      speak(response);
+    }
+
+    function displayError(errorMessage) {
+      const responseContainer = document.getElementById('response-container');
+      const errorElement = document.createElement('p');
+      errorElement.textContent = `Error: ${errorMessage}`;
+      responseContainer.innerHTML = '';
+      responseContainer.appendChild(errorElement);
+
+      speak(errorMessage);
+    }
+
+    function speak(message) {
+      const synth = window.speechSynthesis;
+      const utterance = new SpeechSynthesisUtterance(message);
+      synth.speak(utterance);
+    }
+  </script>
+</body>
+</html>
